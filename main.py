@@ -387,7 +387,7 @@ if "HEROKU" in list(os.environ.keys()):
     @server.route("/")
     def webhook():
         bot.remove_webhook()
-        bot.set_webhook(url="https://randdd-bot.herokuapp.com/")
+        bot.set_webhook(url="https://github.com/kulychok/randdd_bot/blob/master/main.py")
         return "?", 200
     server.run(host="0.0.0.0", port=os.environ.get('PORT', 80))
 else:
