@@ -13,7 +13,7 @@ import logging
 bot = telebot.TeleBot('1099895310:AAHaLPowlJMPqGwsDwG27D45lvdqo8goNkw')
 # Проверим, есть ли переменная окружения Хероку (как ее добавить смотрите ниже)
 
-
+server = Flask(__name__)
 
 
 random_bot_client = pymongo.MongoClient(
@@ -375,20 +375,23 @@ def callback_inline(call):
             bot.answer_callback_query(callback_query_id=call.id, show_alert=False, text=word)
 
 
-if "HEROKU" in list(os.environ.keys()):
-    logger = telebot.logger
-    telebot.logger.setLevel(logging.INFO)
+logger = telebot.logger
+telebot.logger.setLevel(logging.INFO)
 
-    server = Flask(__name__)
-    @server.route("/bot", methods=['POST'])
-    def getMessage():
-        bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
-        return "!", 200
-    @server.route("/")
-    def webhook():
-        bot.remove_webhook()
-        bot.set_webhook(url="https://randdd-bot.herokuapp.com/")
-        return "?", 200
-    server.run(host="0.0.0.0", port=os.environ.get('PORT', 80))
-else:
+
+
+@server.route('/1099895310:AAHaLPowlJMPqGwsDwG27D45lvdqo8goNkw', methods=['POST'])
+def getMessage():
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    return "!", 200
+
+
+@server.route("/")
+def webhook():
     bot.remove_webhook()
+    bot.set_webhook(url='https://randdd-bot.herokuapp.com/1099895310:AAHaLPowlJMPqGwsDwG27D45lvdqo8goNkw')
+    return "!", 200
+
+
+if __name__ == "__main__":
+    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
